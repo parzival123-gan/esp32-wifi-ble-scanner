@@ -1,5 +1,9 @@
 # ESP32 WiFi + Bluetooth Sniffer
-[![Platform](https://img.shields.io/badge/platform-ESP32-blue)](https://www.espressif.com/en/products/socs/esp32)
+(https://img.shields.io/badge/platform-ESP32-blue)](https://www.espressif.com/en/products/socs/esp32)
+(https://img.shields.io/badge/platform-ESP32-blue)
+(https://img.shields.io/badge/language-C++-orange)
+(https://img.shields.io/badge/project-IoT-green)
+
 A lightweight RF scanner built with ESP32 that detects nearby **Wi-Fi and Bluetooth Low Energy devices** and reports their MAC addresses and signal strength (RSSI).
 
 This project demonstrates **wireless packet sniffing, BLE scanning, and RF device detection** using only a single ESP32 board.
