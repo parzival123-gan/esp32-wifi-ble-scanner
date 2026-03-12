@@ -1,0 +1,86 @@
+#include <WiFi.h>
+#include <esp_wifi.h>
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEScan.h>
+
+BLEScan* pBLEScan;
+
+unsigned long lastBLEScan = 0;
+const int BLE_SCAN_INTERVAL = 10000; // every 10 second
+
+void wifi_sniffer(void* buf, wifi_promiscuous_pkt_type_t type) {
+
+  if (type != WIFI_PKT_MGMT) return;
+
+  wifi_promiscuous_pkt_t *pkt = (wifi_promiscuous_pkt_t*)buf;
+
+  int rssi = pkt->rx_ctrl.rssi;
+  uint8_t *mac = pkt->payload + 10;
+
+  Serial.print("[WiFi] ");
+
+  for (int i = 0; i < 6; i++) {
+    Serial.printf("%02X", mac[i]);
+    if (i < 5) Serial.print(":");
+  }
+
+  Serial.print("  RSSI: ");
+  Serial.println(rssi);
+}
+
+class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
+
+  void onResult(BLEAdvertisedDevice device) {
+
+    Serial.print("[BLE ] ");
+
+    Serial.print(device.getAddress().toString().c_str());
+
+    Serial.print("  RSSI: ");
+    Serial.print(device.getRSSI());
+
+    if (device.haveName()) {
+      Serial.print("  Name: ");
+      Serial.print(device.getName().c_str());
+    }
+
+    Serial.println();
+  }
+
+};
+
+void setup() {
+
+  Serial.begin(115200);
+  delay(1000);
+
+  Serial.println("\nESP32 WiFi + BLE Sniffer Started");
+
+  WiFi.mode(WIFI_MODE_STA);
+  WiFi.disconnect();
+
+  esp_wifi_set_promiscuous(true);
+  esp_wifi_set_promiscuous_rx_cb(&wifi_sniffer);
+
+  // BLE setup
+  BLEDevice::init("");
+
+  pBLEScan = BLEDevice::getScan();
+  pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
+  pBLEScan->setActiveScan(true);
+
+}
+void loop() {
+
+  if (millis() - lastBLEScan > BLE_SCAN_INTERVAL) {
+
+    Serial.println("\n--- Starting BLE Scan ---");
+
+    pBLEScan->start(5, false); // scan 5 seconds
+
+    lastBLEScan = millis();
+
+  }
+
+}
