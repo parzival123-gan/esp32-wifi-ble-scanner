@@ -44,21 +44,7 @@ ESP32 Radio
 WiFi Sniffer + BLE Scanner
      ↓
 Serial Output
-```
-## Example Output
 
-```
-[WiFi] 8C:AA:B5:22:9D:11 RSSI: -52
-[WiFi] F4:8C:50:31:77:AB RSSI: -67
-
-[BLE ] d3:7a:11:9c:55:21 RSSI: -70 Name: Redmi Buds
-```
-## Setup
-
-1. Install **ESP32 Board Package** in Arduino IDE
-2. Select your ESP32 board
-3. Set partition scheme to **Huge APP (3MB No OTA)**
-4. Upload the code from `src/`
 ## Applications
 
 * RF monitoring
